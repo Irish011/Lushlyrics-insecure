@@ -29,6 +29,7 @@ def home(request):
     return render(request, 'player.html', {'CONTAINER': CONTAINER, 'song': song})
 
 
+@login_required
 def playlist(request):
     cur_user = playlist_user.objects.get(username=request.user)
     try:
@@ -46,6 +47,7 @@ def playlist(request):
     return render(request, 'playlist.html', {'song': song, 'user_playlist': user_playlist})
 
 
+@login_required
 def search(request):
     if request.method == 'POST':
         add_playlist(request)
@@ -61,6 +63,7 @@ def search(request):
     return render(request, 'search.html', {'CONTAINER': song_li, 'song': song_li[0][0]['id']})
 
 
+@login_required
 def add_playlist(request):
     cur_user = playlist_user.objects.get(username=request.user)
 
@@ -73,8 +76,6 @@ def add_playlist(request):
                                           song_youtube_id=request.POST['songid'])
 
 
-
-
 def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -83,11 +84,6 @@ def signup_view(request):
             user.email = form.cleaned_data.get('email')
             user.save()
 
-            # username = form.cleaned_data.get('username')
-            # password = form.cleaned_data.get('password1')
-            # user = authenticate(username=username, password=password)
-            # if user is not None:
-            #     login(request, user)
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
     else:
@@ -115,20 +111,12 @@ def login_view(request):
             login(request, user)
             return redirect('home')
         else:
-            form= AuthenticationForm(request.POST)
+            form = AuthenticationForm(request.POST)
             return render(request, 'login.html', {'form': form, 'error': 'Invalid creds'})
 
     else:
-        form=AuthenticationForm()
+        form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
-    #     if form.is_valid():
-    #         user = form.get_user()
-    #         login(request, user)
-    #         return redirect('home')
-    #
-    # else:
-    #     form = AuthenticationForm()
-    # return render(request, 'login.html', {'form': form})
 
 
 def logout_view(request):
