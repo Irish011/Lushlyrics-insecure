@@ -1,0 +1,75 @@
+{% load static %}
+
+<!--<!DOCTYPE html>-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn.discordapp.com/icons/715958380556058684/773d6583cd1d7aef41e701783d353aef.webp?size=128" type="image/x-icon">
+    <meta name="description" itemprop="description" content="Play your playlists and favourites tracks, albums, and artists" />
+    <meta name="keywords" content="convert, convert playlists, transfer, syncing, smart links, free, apple music, streaming services" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'formStyle.css' %}">
+    <title>Signup</title>
+    <script>
+        function checkPassword(form) {
+            const confirm_password = document.getElementById("id_password2"); // Update to match form field ID
+            var password = document.getElementById("id_password1").value; // Update to match form field ID
+            if (password != confirm_password.value) {
+                confirm_password.setCustomValidity("Passwords do not match.");
+            } else {
+                confirm_password.setCustomValidity('');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="">
+        <form class="login_form" method="post" oninput="checkPassword(this)">
+        {% csrf_token %}
+            <div class="form-group">
+            <div class="signup_header">
+                <span class="label signup-title center-align">Sign up for free to start listening.</span>
+            </div>
+                <br/>
+            <label for="id_username">Username:</label>
+            <input type="text" name="username" id="id_username" class="form_input"
+                   value="{{ form.username.value|default_if_none:'' }}" required>
+            {% if form.username.errors %}
+                <div class="error">{{ form.username.errors|first }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_email">Email:</label>
+            <input type="email" name="email" id="id_email" class="form_input"
+                   value="{{ form.email.value|default_if_none:'' }}" required>
+            {% if form.email.errors %}
+                <div class="error">{{ form.email.errors|first }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1">Password:</label>
+            <input type="password" name="password1" id="id_password1" class="form_input" required>
+            {% if form.password1.errors %}
+                <div class="error">{{ form.password1.errors|first }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirm Password:</label>
+            <input type="password" name="password2" id="id_password2" class="form_input" required>
+            {% if form.password2.errors %}
+                <div class="error">{{ form.password2.errors|first }}</div>
+            {% endif %}
+        </div>
+
+        <button class="btn btn_log_in" type="submit">Sign Up</button>
+            <div class="divider"></div>
+            <p class="label center-align">Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
+
+    </form>
+    </div>
+</body>
+</html>
